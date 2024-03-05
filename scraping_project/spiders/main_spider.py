@@ -2,6 +2,12 @@
 #https://plato.stanford.edu/contents.html
 import scrapy
 from bs4 import BeautifulSoup
+from neo4j import GraphDatabase, RoutingControl
+
+
+URI = "neo4j://localhost:7687"
+AUTH = ("neo4j", "password")
+
 
 class MainSpider(scrapy.Spider):
     name = "main"

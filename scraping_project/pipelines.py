@@ -7,7 +7,16 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
+from neo4j import GraphDatabase, RoutingControl
+
+
+URI = "neo4j://localhost:7687"
+AUTH = ("neo4j", "password")
 
 class ScrapingProjectPipeline:
+    def process_item(self, item, spider):
+        return item
+
+class ArticleToNeoPipeline:
     def process_item(self, item, spider):
         return item

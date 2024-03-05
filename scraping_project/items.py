@@ -10,3 +10,9 @@ class ScrapingProjectItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+class ArticleItem(scrapy.Item):
+    reference_list = scrapy.Field()
+    article_url = scrapy.Field()
+    article_name = scrapy.Field()
+    author_list = scrapy.Field()
+
