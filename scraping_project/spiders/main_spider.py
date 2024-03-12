@@ -2,8 +2,7 @@
 #https://plato.stanford.edu/contents.html
 import scrapy
 from bs4 import BeautifulSoup
-from neo4j import GraphDatabase, RoutingControl
-
+from scraping_project.items import ArticleItem
 
 URI = "neo4j://localhost:7687"
 AUTH = ("neo4j", "password")
@@ -47,19 +46,22 @@ class MainSpider(scrapy.Spider):
                             article_set.add(sub_list_item.a.get("href"))
         print(article_set)
         print(len(article_set))
-        request_list = []
         for url in article_set:
             yield scrapy.Request("https://plato.stanford.edu/" + url, self.parse_article)
 
     def parse_article(self, response):
-        print (response.url + " This is the URL for our article")
-        related = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='related-entries']/p").get()
-        if related is not None:
-            related = BeautifulSoup(related, 'html.parser')
-            references = related.find_all('a')
-            for reference in references:
-                print(reference.get('href') + " \n ")
-        yield None
+        article = ArticleItem()
+        article['url'] = response.url
+        article['related_entries'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='related-entries']/p").get()
+        article['content'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='main-text']").get()
+        article['bibliography'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='bibliography']").get()
+        article['title'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/h1/text()").get()
+        article['other_internet_resources'] =  response.xpath("//body/div[@id='container']/div[@id='article']/div[@id='content']/div[@id='article-content']/div[@id='aueditable']/div[@id='other-internet-resources']").get()
+        article['copyright'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-copywrite']").get()
+        article['preamble'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='preamble']").get()
+        article['pubinfo'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='pubinfo']").get()
+        article['table_of_contents'] = response.xpath("//body/div[@id='container']/div[@id='content']/div[@id='article']/div[@id='article-content']/div[@id='aueditable']/div[@id='toc']").get()
+        yield article
 
 
 

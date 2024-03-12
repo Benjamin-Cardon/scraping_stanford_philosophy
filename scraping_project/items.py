@@ -11,8 +11,15 @@ class ScrapingProjectItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 class ArticleItem(scrapy.Item):
-    reference_list = scrapy.Field()
-    article_url = scrapy.Field()
-    article_name = scrapy.Field()
-    author_list = scrapy.Field()
+    title = scrapy.Field()
+    pubinfo = scrapy.Field()
+    preamble = scrapy.Field()
+    table_of_contents = scrapy.Field()
+    content = scrapy.Field()
+    bibliography = scrapy.Field()
+    related_entries = scrapy.Field()
+    copyright = scrapy.Field()
+    other_internet_resources = scrapy.Field()
+    url = scrapy.Field()
+    pass
 
